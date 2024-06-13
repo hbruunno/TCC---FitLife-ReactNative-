@@ -44,14 +44,28 @@ app.delete("/item/:id", (req, res) => {
 
 app.put("/item/:id", (req, res) => {
   const { id } = req.params;
-  const { nome, nascimento, cpf, email, sexo, entrada, nota, telefone } = req.body;
-  let SQL = "UPDATE listaalunos SET nome = ?, nascimento = ?, cpf = ?, email = ?, sexo = ?, entrada = ?, nota = ?, telefone = ? WHERE id = ?";
-  bd.query(SQL, [nome, nascimento, cpf, email, sexo, entrada, nota, telefone, parseInt(id)], (err, result) => {
+  const { nome, nascimento, cpf, email, sexo, entrada, nota, telefone, pagamento } = req.body;
+  let SQL = "UPDATE listaalunos SET nome = ?, nascimento = ?, cpf = ?, email = ?, sexo = ?, entrada = ?, nota = ?, telefone = ?, pagamento = ? WHERE id = ?";
+  bd.query(SQL, [nome, nascimento, cpf, email, sexo, entrada, nota, telefone, pagamento, parseInt(id)], (err, result) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
     } else {
       res.send(result);
+    }
+  });
+});
+
+//limpar pagamentos
+app.put('/limparPagamentos', (req, res) => {
+  const SQL = 'UPDATE listaalunos SET pagamento = false';
+
+  bd.query(SQL, (error, results) => {
+    if (error) {
+      console.error('Erro ao limpar pagamentos:', error);
+      res.status(500).send(error);
+    } else {
+      res.status(200).send('Pagamentos limpos');
     }
   });
 });
